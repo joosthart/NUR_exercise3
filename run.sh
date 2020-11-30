@@ -20,7 +20,6 @@ if [ ! -d "data" ]; then
   mkdir data
 fi
 
-
 echo "Downloading Data"
 wget https://home.strw.leidenuniv.nl/~daalen/files/satgals_m11.txt
 wget https://home.strw.leidenuniv.nl/~daalen/files/satgals_m12.txt
@@ -37,7 +36,6 @@ pip3 install -r requirements.txt
 
 echo "Run the first problem ..."
 python3 -W ignore code/problem1.py
-
 
 echo "Run the second problem ..."
 python3 -W ignore code/problem2.py

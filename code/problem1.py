@@ -279,11 +279,12 @@ def quasi_newton_chi2(
         x_i1 = xi + l*ni
 
         # Check if nans in golden section
-        if any(np.isnan(x) for x in x_i1):
-            if verbose:
-                print('Nan encoutered in golden section.')
-            x_i1 = xi + 1e-9*ni
-
+        if np.isnan(x_i1[0]):
+            x_i1[0] = start[0]
+        if np.isnan(x_i1[1]):
+            x_i1[1] = start[1]
+        if np.isnan(x_i1[2]):
+            x_i1[2] = start[2]
 
         delta_i1 = l*ni
         
@@ -614,7 +615,7 @@ if __name__=='__main__':
                         binedges[x:x+2], *fitted_params_chi2[idx], Anorm(*fitted_params_chi2[idx])
                     ) for x in range(len(binedges)-1)
                 ], 
-                label='fit r$\chi^2$',
+                label=r'fit $\chi^2$',
                 color ='C0',
                 ls='--'
             )
