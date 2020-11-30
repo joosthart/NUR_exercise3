@@ -1,4 +1,4 @@
-# NUR_exercise2
+# NUR_exercise3
 Solutions to exercise 3 of the course Numerical Recipes for Astrophysics (fall 2020).
 
 ## Usage
