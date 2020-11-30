@@ -1,0 +1,167 @@
+\section{Satellite galaxies around a massive central – part 3}
+In this section, we will again look at the number density satellite profile,
+\begin{equation}
+    n(x) = A\left\langle N_\mathrm{sat} \right\rangle \left( \frac{x}{b} \right)^{a-3} \exp\left[-\left(\frac{x}{b}\right)^c\right],
+\end{equation}
+where $x$ is the radius relative to the virial radius, $x\equiv r/r_\mathrm{vir}$, and $a$, $b$ and $c$ are free parameters controlling the small-scale slope, transition scale and steepness of the exponential drop-off, respectively. $A$ normalizes the profile such that the 3D spherical integral from $x=0$ to $x_\mathrm{max}=5$ yields the average total number of satellites, $\left\langle N_\mathrm{sat} \right\rangle$. The profile will be fitted to five different sets of data. Each dataset contains halos in a certain halo mass bin with variable numbers of satellites. The five datasets have approximate masses per halo of 11 to 15 $M_\odot$.  For each satellite, the spherical coordinates are given in the files.
+
+\subsection*{1a}
+Here we are going to perform a ``naive'' $\chi^2$ fit on the data. The data first has to binned in radial bins. 15 logarithmically spaced bins ranging from $x=10^{-4}$ to $x=5$ are used to bin the satellites. Logarithmic bins are used, because the functions is approximately linear in log-space for small x. In linear-space, relativelly small bins have to be used to probe the steep the increase and decline of the function. Therefore, logarithmically spaced bins are better suited for fitting a model.
+
+After the binning, $\left\langle N_\mathrm{sat} \right\rangle$ is calculated for all files. $\left\langle N_\mathrm{sat} \right\rangle$ is the total number of satellites divided by the number of halos, $h$, in the dataset. The values of $\left\langle N_\mathrm{sat} \right\rangle$ are given in table \ref{tab:Nsat}.
+
+The number count in the halos is divided by $\left\langle N_\mathrm{sat} \right\rangle$ in order to obtain the mean number of satellites per halo in each radial bin, which can be caculated from the number density profile as $N_i = 4\pi \int_{x_i}^{x_{i+1}} n(x)x^2\mathrm{d}x$. Both the model mean and variance at bin (poissonian noise) $[x_i, x_{i+1}]$ are given by $N_i$. 
+
+A $\chi^2$ is minimized using the Quasi-Newton algorithm, as implemented in the previous exercise. The free parameters in this fit are $a,b \ \mathrm{and}\ c$. At every step, the normalization factor, $A = A(a,b,c)$, is calculated for the given set of parameters. The starting position of all fits is $a=2.4, b=0.25 \ \mathrm{and}\ c=1.6$. These values are the values used in the previous exercise.
+
+In the Quasi-Newton method, a Golden Section algorithm is used, to find the optimal next step size. The algorithm proved to be very susceptible to changes in the initial bracket and target accuracy of the Golden Section algorithm. These values are tweaked manually. In the algorithm optimizing $\chi^2$, an initial bracket of $[0, 10^{-6}]$ is used and a target accuracy of $10^{-6}$.
+
+In order to prevent unphysical values for $a,b,\ \mathrm{and}\ c$, any value that gets negative is set-back to its starting value.
+
+Figure \ref{fig:1} shows the fits produced as described above. All fitted values of $a,b,\ \mathrm{and}\ c$ and the final value of $\chi^2$ are given in table \ref{tab:chi2}.
+
+The fits look reasonable. However, the data for $\log(M_\odot/h)=15$ is very poorly fitted. The obtained values for $b$ and $c$ are the initial guesses. The algorithm is not able to fit this data.
+
+
+\begin{table}[h]
+    \caption{Calculated values of $N_\mathrm{sat}$.}
+    \label{tab:Nsat}
+    \centering
+    \begin{tabular}{l|l}
+    $\log M_\odot/h$ & $\left\langle N_\mathrm{sat} \right\rangle$ \\ \hline
+    11          & 0.014            \\
+    12          & 0.251            \\
+    13          & 4.37             \\
+    14          & 29.1             \\
+    15          & 330                                    
+    \end{tabular}
+\end{table}
+
+\begin{table}[h]
+    \caption{Obtained values of $a$, $b$, $c$ and $\chi^2$ using $\chi^2$ fit.}
+    \label{tab:chi2}
+    \centering
+    \begin{tabular}{l|llll}
+    $\log M_\odot/h$ & {$a$} & $b$ & $c$ & $\chi^2$                                              \\ \hline
+    11          & \input{output/chi2_satgal_m11_best_fit_a.txt} & \input{output/chi2_satgal_m11_best_fit_b.txt} & \input{output/chi2_satgal_m11_best_fit_c.txt} & \input{output/chi2_satgal_m11.txt} \\
+    12          & \input{output/chi2_satgal_m12_best_fit_a.txt} & \input{output/chi2_satgal_m12_best_fit_b.txt} & \input{output/chi2_satgal_m12_best_fit_c.txt} & \input{output/chi2_satgal_m12.txt} \\
+    13          & \input{output/chi2_satgal_m13_best_fit_a.txt} & \input{output/chi2_satgal_m13_best_fit_b.txt} & \input{output/chi2_satgal_m13_best_fit_c.txt} & \input{output/chi2_satgal_m13.txt} \\
+    14          & \input{output/chi2_satgal_m14_best_fit_a.txt} & \input{output/chi2_satgal_m14_best_fit_b.txt} & \input{output/chi2_satgal_m14_best_fit_c.txt} & \input{output/chi2_satgal_m14.txt} \\
+    15          & \input{output/chi2_satgal_m15_best_fit_a.txt} & \input{output/chi2_satgal_m15_best_fit_b.txt} & \input{output/chi2_satgal_m15_best_fit_c.txt} & \input{output/chi2_satgal_m15.txt}
+    \end{tabular}
+\end{table}
+
+\subsection*{1b}
+In the previous section, a ``navive'' $\chi^2$ fit is used to fit the the mean number of satellites per halo. Here, a Poissonian approach is used to fit the model to the data. The same Quasi-Newton algorithm is used as for the $\chi^2$ case. However, the Poisson log-likelihood is optimized, instead of the Gaussian likelihood. 
+
+The negative Poisson log-likelihood of a given set of parameters, $\mathbf{p}$ is given by
+\begin{equation}\label{eq:lnL}
+    -\ln(\mathcal{L}(\mathbf{p})) = -\sum_{i=0}^{N-1}\left[y_i\ln[\mu(x_i|\mathbf{p})]-\mu(x_i|\mathbf{p}) - \ln(y_i!)\right],
+\end{equation}
+where $y_i$ is the observed value in bin $i$, $x_i$ the $x$-coordinate of bin $i$ and $\mu$ the model. Note, that $\ln(y_i!)$ is constant in $\mathbf{p}$ and can therefore be left out of the optimization. Since, we want to find the minimum of this function, we have to find
+\begin{equation}\label{eq:grad_lnL}
+    \frac{\partial \ln(\mathcal{L}(\mathbf{p}))}{\partial p_k} = 0 = \sum_{i=0}^{N-1}\left[ \left( \frac{y_i}{\mu(x_i|\mathbf{p})} -1 \right)  \frac{\partial \mu(x_i|\mathbf{p})}{\partial p_k} \right].
+\end{equation}
+$p_k$ is the $k$-th parameter in $\mathbf{p}$ and the model $\mu = N_i$ in our case.
+
+The $\chi^2$ function and gradient of $\chi^2$ function, used to obtain the $\chi^2$ fit, are replaced with equations \ref{eq:lnL} and \ref{eq:grad_lnL}, respectively. The rest of the code is kept the same as for the $\chi^2$ case.
+
+Again, the optimization algorithm proved to be very susceptible for to changes in the initial bracket and target accuracy of the Golden Section algorithm. In this case, an initial bracket of $[0, 10^{-5}]$ is used and a target accuracy of $10^{-5}$.
+
+The by the fits obtained parameters are given in table \ref{tab:poisson}. The fits are shown in figure \ref{fig:1}. Surprisingly, the Poisson fit does not always seem to performs better than the $\chi^2$ fit. Especially, for the low $x$ range, the Poisson fit is further from the data than the $\chi^2$ fit in all fits except for figure \ref{fig:1_4}. The $\chi^2$ fit was unable to fit the data in the $\log(M_\odot/h)=15$ dataset. The Poisson fit, however, performs very good on this dataset.
+
+I think that something went wrong in my code. I expected the fits to be significantly better than that I obtained. I have invested a lot of time in trying to improve the fits, but, I have not been able to do so. 
+
+
+\begin{table}[h]
+    \caption{Obtained values of $a$, $b$ and $c$ using Poisson likelihood.}
+    \label{tab:poisson}
+    \centering
+    \begin{tabular}{l|llll}
+    $\log M_\odot/h$ & {$a$} & $b$ & $c$ & $-\ln(L)$                                              \\ \hline
+    11          & \input{output/lnL_satgal_m11_best_fit_a.txt} & \input{output/lnL_satgal_m11_best_fit_b.txt} & \input{output/lnL_satgal_m11_best_fit_c.txt} & \input{output/lnL_satgal_m11.txt} \\
+    12          & \input{output/lnL_satgal_m12_best_fit_a.txt} & \input{output/lnL_satgal_m12_best_fit_b.txt} & \input{output/lnL_satgal_m12_best_fit_c.txt} & \input{output/lnL_satgal_m12.txt} \\
+    13          & \input{output/lnL_satgal_m13_best_fit_a.txt} & \input{output/lnL_satgal_m13_best_fit_b.txt} & \input{output/lnL_satgal_m13_best_fit_c.txt} & \input{output/lnL_satgal_m13.txt} \\
+    14          & \input{output/lnL_satgal_m14_best_fit_a.txt} & \input{output/lnL_satgal_m14_best_fit_b.txt} & \input{output/lnL_satgal_m14_best_fit_c.txt} & \input{output/lnL_satgal_m14.txt} \\
+    15          & \input{output/lnL_satgal_m15_best_fit_a.txt} & \input{output/lnL_satgal_m15_best_fit_b.txt} & \input{output/lnL_satgal_m15_best_fit_c.txt} & \input{output/lnL_satgal_m15.txt}
+    \end{tabular}
+\end{table}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/1_0.png}
+        \caption{}
+        \label{fig:1_0}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/1_1.png}
+        \caption{}
+        \label{fig:1_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/1_2.png}
+        \caption{}
+        \label{fig:1_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/1_3.png}
+        \caption{}
+        \label{fig:1_3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/1_4.png}
+        \caption{}
+        \label{fig:1_4}
+    \end{subfigure}
+       \caption{Three simple graphs}
+       \label{fig:1}
+\end{figure}
+
+\subsection*{1c}
+To see which of the two methods performs best, a G-test is performed. The G statistic is given by
+\begin{equation}
+    G=2 \sum_{i=0}^{N-1} y_i\ln\left(\frac{\mu_i}{y_i}\right),
+\end{equation}
+where $y_i$ is ths observed value at $i$ and $\mu_i$ the predicted value at $i$ by the model. While implementing this, I noticed that the calculation failed when $y_i=0$, i.e. a bin is empty. Analytically, this is not the case, since
+\begin{equation}
+    \lim_{x \to 0} \  x\ln\left(\frac{1}{x}\right) = 0.
+\end{equation}
+Therefore, this condition is hard-coded.
+
+The $G$-value is used to calculated the significance of the fit, assuming a $\chi^2$ probability distribution. The significance of a fit is given by
+\begin{equation}
+    Q \equiv 1 - P(x,k),
+\end{equation}
+where $P$ is the CDF of the $\chi^2$ probability distribution, $x$ in our case the $G$-value and $k$ the model's degrees of freedom. For the discussed models, the degrees of freedom are the number of freely chosen bins minus the number of free parameters. Since, 15 bins are used in a fixed interval, 14 bins are freely chosen. There are 3 free parameters; $a$, $b$ and $c$. therefore, the number of degrees of freedom of the models is 11 for all datasets. 
+
+If $Q>0.1$ the model is consistent with the data. If $Q \ll 0.1$ the model is unlikely to bet consistent with the data.
+
+The obtained values for $Q$ are shown in table \ref{tab:significance}. Something went wrong when implementing the G-test. The values are, therefore, not representative for the real significance of the fits. This makes it impossible to draw conclusions from the given values. I have not been able to fix the implementation of the G-test.
+
+\begin{table}[h]
+    \caption{Calculated significance for different fitting methods.}
+    \label{tab:significance}
+    \centering
+    \begin{tabular}{l|ll}
+    $\log M_\odot/h$ & \multicolumn{1}{c}{$Q_\chi^2$}                           & \multicolumn{1}{c}{$Q_\mathrm{Poisson}$}            \\ \hline
+    11          & \input{output/chi2_satgal_m11_significance_of_fit.txt} & \input{output/lnL_satgal_m11_significance_of_fit.txt} \\
+    12          & \input{output/chi2_satgal_m12_significance_of_fit.txt} & \input{output/lnL_satgal_m12_significance_of_fit.txt} \\
+    13          & \input{output/chi2_satgal_m13_significance_of_fit.txt} & \input{output/lnL_satgal_m13_significance_of_fit.txt} \\
+    14          & \input{output/chi2_satgal_m14_significance_of_fit.txt} & \input{output/lnL_satgal_m14_significance_of_fit.txt} \\
+    15          & \input{output/chi2_satgal_m15_significance_of_fit.txt} & \input{output/lnL_satgal_m15_significance_of_fit.txt}
+    \end{tabular}
+\end{table}
+
+\newpage
+
+\subsection*{Code}
+
+\lstinputlisting{code/problem1.py}

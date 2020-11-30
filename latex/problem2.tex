@@ -1,0 +1,43 @@
+\section{Calculating forces with the FFT}
+In this exercise, the gravitational potential of 1024 points in a 16x16x16 grid is caculated. the particles have unit mass and are randomly generated inside the grid. The Volume has periodic boundary such that $x = 16 \equiv 0$. The potential is calculated using a 3D Fourier Transform of the density grid. 
+
+\subsection*{2a}
+Before we can take the Fourier Transform, the particles have to be interpolated to a grid. A cubic grid is used with $16^3$ points. The boundaries of the cells are at $[i, i+1], [j, j+1], [k, k+1]$ in $x,y,z$, so grid point $g_{ijk}$ has coordinates $(x_\mathrm{g},y_\mathrm{g},z_\mathrm{g}) = \left(i+\frac{1}{2},j+\frac{1}{2},k+\frac{1}{2}\right)$. Masses are assigned to the grid points using the Cloud-In-Cell method, i.e. a fraction of the particles mass is assigned to its 8 closed neighbors, given by the weights
+$(1-\left\vert x_\mathrm{p} -x_\mathrm{g} \right\vert)(1-\left\vert y_\mathrm{p} -y_\mathrm{g} \right\vert)(1-\left\vert z_\mathrm{p} -x_\mathrm{g} \right\vert)$, where $i_\mathrm{p}$ denotes the position of the particle. The grid values are converted to a density contrast $\delta = (\rho - \bar{\rho})/\bar{\rho}$, using that $\bar{\rho}= 1024/16^3$.
+
+The density contrast is shown in figure \ref{fig:2a}. Four slices are shown at different z coordingates. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{./plots/2a_density_contrast.png}
+    \caption{Density contrast of 1024 randomly generated particles with unit mass. The density contrast is shown at $z=4,9,11 \ \mathrm{and}\  14$.}
+    \label{fig:2a}
+\end{figure}
+
+\subsection*{2b}
+Here, the gravitational potential is calculated using the Poisson Equation: $\nabla^2\phi = 4\pi G\bar{\rho}(1+\delta)$. This equation only has to be solved spatially, thus we are only concerned with $\nabla^2\phi \propto \delta$. $\phi$ can be calculated using th Fourier Transform as 
+\begin{equation}
+    \phi = \mathcal{F}^-1\left[ \frac{\mathcal{F}\left[\nabla^2 \phi \right]}{k^2} \right],
+\end{equation}
+where $\mathcal{F}\left[f(x)\right] = f(\widetilde{k})$, for some function $f$. The Fourier Transform is calculated using the non inplace Cooley-Tukey algorithm, which can be found in section \ref{sec:2code}. Here we set $4\pi G \bar{\rho} = 1$, therefore, $\nabla^2 \phi = 1 + \delta$.
+
+In figure \ref{fig:2b_1}, $\log_{10} \left(| \widetilde{\phi} | \right)$ is shown, where $\widetilde{\phi} = \mathcal{F}\left[\nabla^2 \phi\right]$. The figure contains the same slices as figure \ref{fig:2a}. Figure \ref{fig:2b_2}, shows the calculated potential, $\phi$, for the same slices as figures \ref{fig:2b_1} and \ref{fig:2a}. In this figure only the real part of $\phi$ is shown. Due to numerical errors, some imaginary part remains in $\phi$. Since the imaginary part has no physical meaning, it is discarded.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{./plots/2b_FT_phi.png}
+    \caption{Logarithm of absolute value of $\widetilde{\phi}$. Shown panels correspond to $z=4,9,11 \ \mathrm{and}\  14$.}
+    \label{fig:2b_1}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{./plots/2b_phi.png}
+    \caption{Potential of randomly generated particles. The panels show slices at $z=4,9,11 \ \mathrm{and}\  14$.}
+    \label{fig:2b_2}
+\end{figure}
+
+\newpage
+
+\subsection*{code}\label{sec:2code}
+\lstinputlisting{code/problem2.py}
